@@ -22,7 +22,7 @@ public class Tester {
             printOutput(mismatchPath, mismatch);
 
         } catch (IOException ex){
-            OutputWriter.displayException(ExceptionMessages.CANNOT_ACCESS_FILE);
+            throw new IllegalArgumentException(ExceptionMessages.CANNOT_ACCESS_FILE);
         }
     }
 

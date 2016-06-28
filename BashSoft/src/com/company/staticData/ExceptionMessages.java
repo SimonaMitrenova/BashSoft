@@ -39,4 +39,6 @@ public class ExceptionMessages {
     public static final String INVALID_NUMBER_OF_SCORES = "The number of scores for the given course is greater than the possible.";
 
     public static final String INVALID_SCORE = "Invalid score";
+
+    public static final String NULL_OR_EMPTY_VALUE = "The value of the variable CANNOT be null or empty!";
 }

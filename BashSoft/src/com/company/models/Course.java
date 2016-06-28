@@ -1,6 +1,5 @@
 package com.company.models;
 
-import com.company.io.OutputWriter;
 import com.company.staticData.ExceptionMessages;
 
 import java.util.HashMap;
@@ -28,9 +27,8 @@ public class Course {
 
     public void enrollStudent(Student student){
         if (this.studentsByName.containsKey(student.getUserName())){
-            OutputWriter.displayException(
+            throw new IllegalArgumentException(
                     String.format(ExceptionMessages.STUDENT_ALREADY_ENROLLED_IN_GIVEN_COURSE, student.getUserName(), this.name));
-            return;
         }
 
         this.studentsByName.put(student.getUserName(), student);

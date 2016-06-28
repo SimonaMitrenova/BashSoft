@@ -1,6 +1,5 @@
 package com.company.io;
 
-import java.util.List;
 
 public class OutputWriter {
     public static void writeMessage(String message){

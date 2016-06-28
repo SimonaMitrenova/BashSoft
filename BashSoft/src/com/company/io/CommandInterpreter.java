@@ -26,6 +26,14 @@ public class CommandInterpreter {
     public void interpretCommand(String input){
         String[] data = input.split("\\s+");
         String command = data[0].toLowerCase();
+        try{
+            parseCommand(input, data, command);
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException ex){
+            OutputWriter.displayException(ex.getMessage());
+        }
+    }
+
+    private void parseCommand(String input, String[] data, String command) {
         switch (command){
             case "open":
                 this.tryOpenFile(input, data);
@@ -278,13 +286,15 @@ public class CommandInterpreter {
             this.displayInvalidCommandMessage(input);
             return;
         }
+        String result;
 
         if (data.length == 1){
-            this.ioManager.traverseDirectory(0);
+             result = this.ioManager.traverseDirectory(0);
         } else {
             int depth = Integer.parseInt(data[1]);
-            this.ioManager.traverseDirectory(depth);
+            result = this.ioManager.traverseDirectory(depth);
         }
+        OutputWriter.writeMessage(result);
     }
 
     private void tryCreateDirectory(String input, String[] data) {

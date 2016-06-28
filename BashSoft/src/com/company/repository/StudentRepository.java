@@ -27,8 +27,7 @@ public class StudentRepository {
 
     public void unloadData(){
         if (!this.isDataInitialized){
-            OutputWriter.displayException(ExceptionMessages.DATA_NOT_INITIALIZED);
-            return;
+            throw new IllegalArgumentException(ExceptionMessages.DATA_NOT_INITIALIZED);
         }
 
         this.courses = null;
@@ -38,8 +37,7 @@ public class StudentRepository {
 
     public void loadData(String fileName){
         if (this.isDataInitialized){
-            OutputWriter.displayException(ExceptionMessages.DATA_ALREADY_INITIALIZED);
-            return;
+            throw new IllegalArgumentException(ExceptionMessages.DATA_ALREADY_INITIALIZED);
         }
 
         this.courses = new LinkedHashMap<>();
@@ -48,7 +46,7 @@ public class StudentRepository {
             this.readData(fileName);
             this.isDataInitialized = true;
         } catch (IOException e) {
-            OutputWriter.displayException(ExceptionMessages.CANNOT_ACCESS_FILE);
+            throw new IllegalArgumentException(ExceptionMessages.CANNOT_ACCESS_FILE);
         }
     }
 
@@ -74,7 +72,7 @@ public class StudentRepository {
         String regex = "([A-Z][a-zA-Z#\\+]*_[A-Z][a-z]{2}_\\d{4})\\s+([A-Za-z]+\\d{2}_\\d{2,4})\\s([\\s0-9]+)";
         Pattern pattern = Pattern.compile(regex);
 
-        String path = SessionData.currentPath + "\\resources\\" + fileName;
+        String path = SessionData.currentPath + "\\" + fileName;
         List<String> lines = Files.readAllLines(Paths.get(path));
 
         for (String line : lines) {

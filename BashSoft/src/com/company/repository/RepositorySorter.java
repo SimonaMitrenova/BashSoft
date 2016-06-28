@@ -10,8 +10,7 @@ public class RepositorySorter {
     public void printSortedStudents(HashMap<String, Double> courseData, String comparisonType, int numberOfStudents){
         comparisonType = comparisonType.toLowerCase();
         if (!comparisonType.equals("ascending") && !comparisonType.equals("descending")) {
-            OutputWriter.displayException(ExceptionMessages.INVALID_COMPARISON_QUERY);
-            return;
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_COMPARISON_QUERY);
         }
 
         Comparator<Map.Entry<String, Double>> comparator = (x, y) ->
