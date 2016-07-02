@@ -1,5 +1,6 @@
 package com.company.network;
 
+import com.company.exceptions.InvalidPathException;
 import com.company.io.OutputWriter;
 import com.company.staticData.ExceptionMessages;
 import com.company.staticData.SessionData;
@@ -60,7 +61,7 @@ public class DownloadManager {
     private String extractNameOfFile(String fileUrl) throws MalformedURLException {
         int indexOfLastSlash = fileUrl.lastIndexOf('/');
         if (indexOfLastSlash == -1){
-            throw new MalformedURLException(ExceptionMessages.INVALID_PATH);
+            throw new InvalidPathException();
         }
 
         return fileUrl.substring(indexOfLastSlash + 1);

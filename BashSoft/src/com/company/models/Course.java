@@ -1,6 +1,6 @@
 package com.company.models;
 
-import com.company.staticData.ExceptionMessages;
+import com.company.exceptions.DuplicateEntryInStructureException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,8 +27,7 @@ public class Course {
 
     public void enrollStudent(Student student){
         if (this.studentsByName.containsKey(student.getUserName())){
-            throw new IllegalArgumentException(
-                    String.format(ExceptionMessages.STUDENT_ALREADY_ENROLLED_IN_GIVEN_COURSE, student.getUserName(), this.name));
+            throw new DuplicateEntryInStructureException(student.getUserName(), this.name);
         }
 
         this.studentsByName.put(student.getUserName(), student);

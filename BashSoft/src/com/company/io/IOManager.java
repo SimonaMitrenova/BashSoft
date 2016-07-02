@@ -1,5 +1,7 @@
 package com.company.io;
 
+import com.company.exceptions.InvalidFileNameException;
+import com.company.exceptions.InvalidPathException;
 import com.company.staticData.ExceptionMessages;
 import com.company.staticData.SessionData;
 
@@ -23,7 +25,6 @@ public class IOManager {
             }
 
             output.append(currentFolder.toString()).append("%n");
-            //OutputWriter.writeMessageOnNewLine(currentFolder.toString());
 
             if (currentFolder.listFiles() != null) {
                 for (File file : currentFolder.listFiles()) {
@@ -33,10 +34,8 @@ public class IOManager {
                         int indexOfLastSlash = file.toString().lastIndexOf("\\");
                         for (int i = 0; i < indexOfLastSlash; i++) {
                             output.append("-");
-                            //OutputWriter.writeMessage("-");
                         }
                         output.append(file.getName()).append("%n");
-                        //OutputWriter.writeMessageOnNewLine(file.getName());
                     }
                 }
             }
@@ -49,7 +48,7 @@ public class IOManager {
         File file = new File(path);
         boolean wasDirMade = file.mkdir();
         if (!wasDirMade) {
-            throw new IllegalArgumentException(ExceptionMessages.FORBIDDEN_SYMBOLS_CONTAINED_IN_NAME);
+            throw new InvalidFileNameException();
         }
     }
 
@@ -66,7 +65,7 @@ public class IOManager {
                 String newPath = currentPath.substring(0, indexOfLastSlash);
                 changeCurrentDirAbsolutePath(newPath);
             } catch (StringIndexOutOfBoundsException ex) {
-                throw new StringIndexOutOfBoundsException(ExceptionMessages.INVALID_DESTINATION);
+                throw new InvalidPathException();
             }
 
         } else {
@@ -80,7 +79,7 @@ public class IOManager {
     public void changeCurrentDirAbsolutePath(String absolutePath) {
         File file = new File(absolutePath);
         if (!file.exists()) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_PATH);
+            throw new InvalidPathException();
         }
 
         SessionData.currentPath = absolutePath;

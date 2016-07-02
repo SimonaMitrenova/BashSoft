@@ -87,6 +87,7 @@ public class StudentRepository {
             try{
                 int[] scores = Arrays.stream(scoresStr.split("\\s+")).mapToInt(Integer::parseInt).toArray();
                 if (Arrays.stream(scores).anyMatch(score -> score > 100 || score < 0)){
+
                     OutputWriter.displayException(ExceptionMessages.INVALID_SCORE);
                     continue;
                 }

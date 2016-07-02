@@ -1,5 +1,8 @@
 package com.company.models;
 
+import com.company.exceptions.DuplicateEntryInStructureException;
+import com.company.exceptions.InvalidStringException;
+import com.company.exceptions.KeyNotFoundException;
 import com.company.staticData.ExceptionMessages;
 
 import java.util.*;
@@ -21,7 +24,7 @@ public class Student {
 
     public void setUserName(String userName) {
         if (userName == null || userName.trim().length() == 0){
-            throw new IllegalArgumentException(ExceptionMessages.NULL_OR_EMPTY_VALUE);
+            throw new InvalidStringException();
         }
         this.userName = userName;
     }
@@ -36,8 +39,7 @@ public class Student {
 
     public void enrollInCourse(Course course){
         if (this.enrolledCourses.containsKey(course.getName())){
-            throw new IllegalArgumentException(
-                    String.format(ExceptionMessages.STUDENT_ALREADY_ENROLLED_IN_GIVEN_COURSE, this.userName, course.getName()));
+            throw new DuplicateEntryInStructureException(this.getUserName(), course.getName());
         }
 
         this.enrolledCourses.put(course.getName(), course);
@@ -45,7 +47,7 @@ public class Student {
 
     public void setMarksInCourse(String courseName, int ... scores){
         if (!this.enrolledCourses.containsKey(courseName)){
-            throw new IllegalArgumentException(ExceptionMessages.NOT_ENROLLED_IN_COURSE);
+            new KeyNotFoundException();
         }
         if (scores.length > Course.NUMBER_OF_TASKS_ON_EXAM){
             throw new IllegalArgumentException(ExceptionMessages.INVALID_NUMBER_OF_SCORES);
