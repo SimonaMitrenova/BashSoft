@@ -1,19 +1,27 @@
 package com.company.io;
 
 import com.company.commands.*;
+import com.company.judge.contracts.ContentComparer;
+import com.company.io.contracts.DirectoryManager;
+import com.company.commands.contracts.Executable;
+import com.company.io.contracts.Interpreter;
 import com.company.exceptions.InvalidInputException;
-import com.company.judge.Tester;
 import com.company.network.DownloadManager;
+import com.company.network.contracts.AsynchDownloader;
 import com.company.repository.StudentRepository;
+import com.company.repository.contracts.Database;
 
-public class CommandInterpreter {
+public class CommandInterpreter implements Interpreter{
 
-    private Tester tester;
-    private StudentRepository studentRepository;
-    private DownloadManager downloadManager;
-    private IOManager ioManager;
+    private ContentComparer tester;
+    private Database studentRepository;
+    private AsynchDownloader downloadManager;
+    private DirectoryManager ioManager;
 
-    public CommandInterpreter(Tester tester, StudentRepository studentRepository, DownloadManager downloadManager, IOManager ioManager) {
+    public CommandInterpreter(ContentComparer tester,
+                              Database studentRepository,
+                              AsynchDownloader downloadManager,
+                              DirectoryManager ioManager) {
         this.tester = tester;
         this.studentRepository = studentRepository;
         this.downloadManager = downloadManager;
@@ -24,14 +32,14 @@ public class CommandInterpreter {
         String[] data = input.split("\\s+");
         String commandName = data[0].toLowerCase();
         try{
-            Command command = parseCommand(input, data, commandName);
+            Executable command = parseCommand(input, data, commandName);
             command.execute();
         } catch (Throwable ex){
             OutputWriter.displayException(ex.getMessage());
         }
     }
 
-    private Command parseCommand(String input, String[] data, String command) {
+    private Executable parseCommand(String input, String[] data, String command) {
         switch (command){
             case "open":
                 return new OpenFileCommand(input, data, studentRepository, tester, ioManager, downloadManager);

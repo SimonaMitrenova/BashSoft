@@ -1,16 +1,17 @@
 package com.company.io;
 
+import com.company.io.contracts.Interpreter;
+import com.company.io.contracts.Reader;
 import com.company.staticData.SessionData;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class InputReader {
+public class InputReader implements Reader {
     private final String END_COMMAND = "quit";
-    private CommandInterpreter commandInterpreter;
+    private Interpreter commandInterpreter;
 
-    public InputReader(CommandInterpreter commandInterpreter) {
+    public InputReader(Interpreter commandInterpreter) {
         this.commandInterpreter = commandInterpreter;
     }
 

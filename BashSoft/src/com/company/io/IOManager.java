@@ -1,14 +1,14 @@
 package com.company.io;
 
+import com.company.io.contracts.DirectoryManager;
 import com.company.exceptions.InvalidFileNameException;
 import com.company.exceptions.InvalidPathException;
-import com.company.staticData.ExceptionMessages;
 import com.company.staticData.SessionData;
 
 import java.io.File;
 import java.util.LinkedList;
 
-public class IOManager {
+public class IOManager implements DirectoryManager {
     public String traverseDirectory(int depth) {
         LinkedList<File> subFolders = new LinkedList<>();
         String path = getCurrentDirectoryPath();

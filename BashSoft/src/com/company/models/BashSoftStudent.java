@@ -1,5 +1,7 @@
 package com.company.models;
 
+import com.company.models.contracts.Course;
+import com.company.models.contracts.Student;
 import com.company.exceptions.DuplicateEntryInStructureException;
 import com.company.exceptions.InvalidStringException;
 import com.company.exceptions.KeyNotFoundException;
@@ -7,12 +9,12 @@ import com.company.staticData.ExceptionMessages;
 
 import java.util.*;
 
-public class Student {
+public class BashSoftStudent implements Student {
     private String userName;
     private HashMap<String, Course> enrolledCourses;
     private HashMap<String, Double> marksByCourseName;
 
-    public Student(String userName) {
+    public BashSoftStudent(String userName) {
         this.setUserName(userName);
         this.enrolledCourses = new LinkedHashMap<>();
         this.marksByCourseName = new LinkedHashMap<>();
@@ -47,7 +49,7 @@ public class Student {
 
     public void setMarksInCourse(String courseName, int ... scores){
         if (!this.enrolledCourses.containsKey(courseName)){
-            new KeyNotFoundException();
+            throw new KeyNotFoundException();
         }
         if (scores.length > Course.NUMBER_OF_TASKS_ON_EXAM){
             throw new IllegalArgumentException(ExceptionMessages.INVALID_NUMBER_OF_SCORES);

@@ -6,9 +6,9 @@ public class ExceptionMessages {
 
     public static final String DATA_NOT_INITIALIZED = "Data is not initialized.";
 
-    public static final String NOT_EXISTING_COURSE = "Course does not exist.";
+    public static final String NOT_EXISTING_COURSE = "BashSoftCourse does not exist.";
 
-    public static final String NOT_EXISTING_STUDENT = "Student does not exist.";
+    public static final String NOT_EXISTING_STUDENT = "BashSoftStudent does not exist.";
 
     public static final String CANNOT_ACCESS_FILE = "Cannot access file.";
 
@@ -27,7 +27,7 @@ public class ExceptionMessages {
 
     //public static final String STUDENT_ALREADY_ENROLLED_IN_GIVEN_COURSE = "The %s already exists in %s.";
 
-    //public static final String NOT_ENROLLED_IN_COURSE = "Student must be enrolled in a course before you set his mark.";
+    //public static final String NOT_ENROLLED_IN_COURSE = "BashSoftStudent must be enrolled in a course before you set his mark.";
 
     public static final String INVALID_NUMBER_OF_SCORES = "The number of scores for the given course is greater than the possible.";
 

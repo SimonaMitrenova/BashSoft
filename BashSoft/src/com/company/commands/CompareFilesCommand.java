@@ -1,18 +1,21 @@
 package com.company.commands;
 
+import com.company.judge.contracts.ContentComparer;
+import com.company.io.contracts.DirectoryManager;
+import com.company.commands.contracts.Executable;
 import com.company.exceptions.InvalidInputException;
-import com.company.io.IOManager;
-import com.company.judge.Tester;
 import com.company.network.DownloadManager;
+import com.company.network.contracts.AsynchDownloader;
 import com.company.repository.StudentRepository;
+import com.company.repository.contracts.Database;
 
-public class CompareFilesCommand extends Command {
+public class CompareFilesCommand extends Command implements Executable {
     public CompareFilesCommand(String input,
                                String[] data,
-                               StudentRepository studentRepository,
-                               Tester tester,
-                               IOManager ioManager,
-                               DownloadManager downloadManager) {
+                               Database studentRepository,
+                               ContentComparer tester,
+                               DirectoryManager ioManager,
+                               AsynchDownloader downloadManager) {
         super(input, data, studentRepository, tester, ioManager, downloadManager);
     }
 

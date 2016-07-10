@@ -1,18 +1,17 @@
 package com.company.models;
 
+import com.company.models.contracts.Course;
+import com.company.models.contracts.Student;
 import com.company.exceptions.DuplicateEntryInStructureException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class Course {
-    public static final int NUMBER_OF_TASKS_ON_EXAM = 5;
-    public static final int MAX_SCORE_ON_EXAM_TASK = 100;
-
+public class BashSoftCourse implements Course {
     private String name;
     private HashMap<String, Student> studentsByName;
 
-    public Course(String name) {
+    public BashSoftCourse(String name) {
         this.name = name;
         this.studentsByName = new LinkedHashMap<>();
     }

@@ -1,12 +1,13 @@
 package com.company.repository;
 
 import com.company.io.OutputWriter;
+import com.company.repository.contracts.DataSorter;
 import com.company.staticData.ExceptionMessages;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RepositorySorter {
+public class RepositorySorter implements DataSorter{
     public void printSortedStudents(HashMap<String, Double> courseData, String comparisonType, int numberOfStudents){
         comparisonType = comparisonType.toLowerCase();
         if (!comparisonType.equals("ascending") && !comparisonType.equals("descending")) {

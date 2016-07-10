@@ -1,5 +1,6 @@
 package com.company.repository;
 
+import com.company.repository.contracts.DataFilter;
 import com.company.staticData.ExceptionMessages;
 import com.company.io.OutputWriter;
 
@@ -7,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class RepositoryFilter {
+public class RepositoryFilter implements DataFilter {
     public void printFilteredStudents(HashMap<String, Double> courseData, String filterType, int numberOfStudents){
         Predicate<Double> filter = createPredicate(filterType);
 

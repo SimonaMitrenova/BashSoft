@@ -1,5 +1,6 @@
 package com.company.judge;
 
+import com.company.judge.contracts.ContentComparer;
 import com.company.staticData.ExceptionMessages;
 import com.company.io.OutputWriter;
 
@@ -9,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tester {
+public class Tester implements ContentComparer {
     public void compareContent(String actualOutput, String expectedOutput) {
         try {
             OutputWriter.writeMessageOnNewLine("Reading files ...");

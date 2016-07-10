@@ -2,6 +2,7 @@ package com.company.network;
 
 import com.company.exceptions.InvalidPathException;
 import com.company.io.OutputWriter;
+import com.company.network.contracts.AsynchDownloader;
 import com.company.staticData.ExceptionMessages;
 import com.company.staticData.SessionData;
 
@@ -13,7 +14,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-public class DownloadManager {
+public class DownloadManager implements AsynchDownloader {
     public void download(String fileUrl) {
 
         URL url;

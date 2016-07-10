@@ -1,7 +1,12 @@
 package com.company.repository;
 
-import com.company.models.Course;
-import com.company.models.Student;
+import com.company.models.contracts.Course;
+import com.company.models.contracts.Student;
+import com.company.models.BashSoftCourse;
+import com.company.models.BashSoftStudent;
+import com.company.repository.contracts.DataFilter;
+import com.company.repository.contracts.DataSorter;
+import com.company.repository.contracts.Database;
 import com.company.staticData.ExceptionMessages;
 import com.company.io.OutputWriter;
 import com.company.staticData.SessionData;
@@ -13,14 +18,14 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StudentRepository {
+public class StudentRepository implements Database {
     private boolean isDataInitialized = false;
     private HashMap<String, Course> courses;
     private HashMap<String, Student> students;
-    private RepositoryFilter repositoryFilter;
-    private RepositorySorter repositorySorter;
+    private DataFilter repositoryFilter;
+    private DataSorter repositorySorter;
 
-    public StudentRepository(RepositoryFilter repositoryFilter, RepositorySorter repositorySorter) {
+    public StudentRepository(DataFilter repositoryFilter, DataSorter repositorySorter) {
         this.repositoryFilter = repositoryFilter;
         this.repositorySorter = repositorySorter;
     }
@@ -91,15 +96,15 @@ public class StudentRepository {
                     OutputWriter.displayException(ExceptionMessages.INVALID_SCORE);
                     continue;
                 }
-                if (scores.length > Course.NUMBER_OF_TASKS_ON_EXAM){
+                if (scores.length > BashSoftCourse.NUMBER_OF_TASKS_ON_EXAM){
                     OutputWriter.displayException(ExceptionMessages.INVALID_NUMBER_OF_SCORES);
                     continue;
                 }
                 if (!this.students.containsKey(studentName)){
-                    this.students.put(studentName, new Student(studentName));
+                    this.students.put(studentName, new BashSoftStudent(studentName));
                 }
                 if (!this.courses.containsKey(courseName)){
-                    this.courses.put(courseName, new Course(courseName));
+                    this.courses.put(courseName, new BashSoftCourse(courseName));
                 }
 
                 Course course = this.courses.get(courseName);
