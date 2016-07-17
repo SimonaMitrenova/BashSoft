@@ -83,6 +83,9 @@ public class CommandInterpreter implements Interpreter{
             case "downloadasynch":
                 return new DownloadAsynchCommand(input, data, studentRepository, tester, ioManager, downloadManager);
 
+            case "display":
+                return new DisplayCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+
             default:
                 throw new InvalidInputException(input);
         }

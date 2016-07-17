@@ -9,4 +9,5 @@ filter students - filter {courseName} excellent/average/poor take 2/5/all
 order students - order {courseName} ascending/descending take 20/10/all
 download file - download URL (saved in current directory)
 download file on new thread - downloadAsynch URL (saved in the current directory)
+display data entities - display students/courses ascending/descending
 get help – help

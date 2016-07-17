@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class BashSoftCourse implements Course {
+
     private String name;
     private HashMap<String, Student> studentsByName;
 
@@ -16,10 +17,12 @@ public class BashSoftCourse implements Course {
         this.studentsByName = new LinkedHashMap<>();
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public HashMap<String, Student> getStudentsByName() {
         return studentsByName;
     }
@@ -30,5 +33,15 @@ public class BashSoftCourse implements Course {
         }
 
         this.studentsByName.put(student.getUserName(), student);
+    }
+
+    @Override
+    public int compareTo(Course other) {
+        return this.getName().compareTo(other.getName());
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

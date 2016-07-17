@@ -20,6 +20,7 @@ public class BashSoftStudent implements Student {
         this.marksByCourseName = new LinkedHashMap<>();
     }
 
+    @Override
     public String getUserName() {
         return userName;
     }
@@ -35,10 +36,12 @@ public class BashSoftStudent implements Student {
         return Collections.unmodifiableMap(enrolledCourses);
     }
 
+    @Override
     public Map<String, Double> getMarksByCourseName() {
         return Collections.unmodifiableMap(marksByCourseName);
     }
 
+    @Override
     public void enrollInCourse(Course course){
         if (this.enrolledCourses.containsKey(course.getName())){
             throw new DuplicateEntryInStructureException(this.getUserName(), course.getName());
@@ -47,6 +50,7 @@ public class BashSoftStudent implements Student {
         this.enrolledCourses.put(course.getName(), course);
     }
 
+    @Override
     public void setMarksInCourse(String courseName, int ... scores){
         if (!this.enrolledCourses.containsKey(courseName)){
             throw new KeyNotFoundException();
@@ -59,11 +63,20 @@ public class BashSoftStudent implements Student {
         this.marksByCourseName.put(courseName, mark);
     }
 
+    @Override
+    public int compareTo(Student other) {
+        return this.getUserName().compareTo(other.getUserName());
+    }
+
+    @Override
+    public String toString() {
+        return this.getUserName();
+    }
+
     private double calculateMark(int[] scores) {
         double percentageOfSolvedExam = Arrays.stream(scores).sum() /
                 (double) (Course.NUMBER_OF_TASKS_ON_EXAM * Course.MAX_SCORE_ON_EXAM_TASK);
 
-        double mark = percentageOfSolvedExam * 4 + 2;
-        return mark;
+        return (percentageOfSolvedExam * 4) + 2;
     }
 }

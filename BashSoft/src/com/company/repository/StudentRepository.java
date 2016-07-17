@@ -1,5 +1,7 @@
 package com.company.repository;
 
+import com.company.collections.SimpleSortedList;
+import com.company.collections.contracts.SimpleOrderedBag;
 import com.company.models.contracts.Course;
 import com.company.models.contracts.Student;
 import com.company.models.BashSoftCourse;
@@ -30,6 +32,7 @@ public class StudentRepository implements Database {
         this.repositorySorter = repositorySorter;
     }
 
+    @Override
     public void unloadData(){
         if (!this.isDataInitialized){
             throw new IllegalArgumentException(ExceptionMessages.DATA_NOT_INITIALIZED);
@@ -40,6 +43,7 @@ public class StudentRepository implements Database {
         this.isDataInitialized = false;
     }
 
+    @Override
     public void loadData(String fileName){
         if (this.isDataInitialized){
             throw new IllegalArgumentException(ExceptionMessages.DATA_ALREADY_INITIALIZED);
@@ -55,6 +59,7 @@ public class StudentRepository implements Database {
         }
     }
 
+    @Override
     public void getStudentMarksInCourse(String course, String student){
         if (this.isQueryForStudentPossible(course, student)){
             return;
@@ -63,6 +68,7 @@ public class StudentRepository implements Database {
         OutputWriter.displayStudent(student, mark);
     }
 
+    @Override
     public void getStudentsByCourse(String course){
         if (!this.isQueryForCoursePossible(course)){
             return;
@@ -71,6 +77,56 @@ public class StudentRepository implements Database {
         for (Map.Entry<String, Student> student : this.courses.get(course).getStudentsByName().entrySet()) {
             this.getStudentMarksInCourse(course, student.getKey());
         }
+    }
+
+    @Override
+    public SimpleOrderedBag<Course> getAllCoursesSorted(Comparator<Course> comparator) {
+        SimpleOrderedBag<Course> sortedCourses = new SimpleSortedList<>(Course.class, comparator);
+        sortedCourses.addAll(this.courses.values());
+        return sortedCourses;
+    }
+
+    @Override
+    public SimpleOrderedBag<Student> getAllStudentsSorted(Comparator<Student> comparator) {
+        SimpleOrderedBag<Student> sortedStudents = new SimpleSortedList<>(Student.class, comparator);
+        sortedStudents.addAll(this.students.values());
+        return sortedStudents;
+    }
+
+    @Override
+    public void filterAndTake(String courseName, String filter) {
+        int studentsToTake = this.courses.get(courseName).getStudentsByName().size();
+        this.filterAndTake(courseName, filter, studentsToTake);
+    }
+
+    @Override
+    public void filterAndTake(String courseName, String filter, int studentsToTake) {
+        if (!this.isQueryForCoursePossible(courseName)) {
+            return;
+        }
+        HashMap<String, Double> marks = new LinkedHashMap<>();
+        for (Map.Entry<String,Student> entry : this.courses.get(courseName).getStudentsByName().entrySet()) {
+            marks.put(entry.getKey(), entry.getValue().getMarksByCourseName().get(courseName));
+        }
+        this.repositoryFilter.printFilteredStudents(marks, filter, studentsToTake);
+    }
+
+    @Override
+    public void orderAndTake(String courseName, String orderType, int studentsToTake) {
+        if (!this.isQueryForCoursePossible(courseName)) {
+            return;
+        }
+        HashMap<String, Double> marks = new LinkedHashMap<>();
+        for (Map.Entry<String,Student> entry : this.courses.get(courseName).getStudentsByName().entrySet()) {
+            marks.put(entry.getKey(), entry.getValue().getMarksByCourseName().get(courseName));
+        }
+        this.repositorySorter.printSortedStudents(marks, orderType, studentsToTake);
+    }
+
+    @Override
+    public void orderAndTake(String courseName, String orderType) {
+        int studentsToTake = this.courses.get(courseName).getStudentsByName().size();
+        this.orderAndTake(courseName, orderType, studentsToTake);
     }
 
     private void readData(String fileName) throws IOException {
@@ -143,37 +199,5 @@ public class StudentRepository implements Database {
         }
 
         return true;
-    }
-
-    public void filterAndTake(String courseName, String filter) {
-        int studentsToTake = this.courses.get(courseName).getStudentsByName().size();
-        this.filterAndTake(courseName, filter, studentsToTake);
-    }
-
-    public void filterAndTake(String courseName, String filter, int studentsToTake) {
-        if (!this.isQueryForCoursePossible(courseName)) {
-            return;
-        }
-        HashMap<String, Double> marks = new LinkedHashMap<>();
-        for (Map.Entry<String,Student> entry : this.courses.get(courseName).getStudentsByName().entrySet()) {
-            marks.put(entry.getKey(), entry.getValue().getMarksByCourseName().get(courseName));
-        }
-        this.repositoryFilter.printFilteredStudents(marks, filter, studentsToTake);
-    }
-
-    public void orderAndTake(String courseName, String orderType, int studentsToTake) {
-        if (!this.isQueryForCoursePossible(courseName)) {
-            return;
-        }
-        HashMap<String, Double> marks = new LinkedHashMap<>();
-        for (Map.Entry<String,Student> entry : this.courses.get(courseName).getStudentsByName().entrySet()) {
-            marks.put(entry.getKey(), entry.getValue().getMarksByCourseName().get(courseName));
-        }
-        this.repositorySorter.printSortedStudents(marks, orderType, studentsToTake);
-    }
-
-    public void orderAndTake(String courseName, String orderType) {
-        int studentsToTake = this.courses.get(courseName).getStudentsByName().size();
-        this.orderAndTake(courseName, orderType, studentsToTake);
     }
 }
