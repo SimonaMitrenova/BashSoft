@@ -1,23 +1,20 @@
 package com.company.commands;
 
-import com.company.judge.contracts.ContentComparer;
-import com.company.io.contracts.DirectoryManager;
+import com.company.annotations.Alias;
+import com.company.annotations.Inject;
 import com.company.commands.contracts.Executable;
 import com.company.exceptions.InvalidInputException;
-import com.company.network.DownloadManager;
-import com.company.network.contracts.AsynchDownloader;
-import com.company.repository.StudentRepository;
 import com.company.repository.contracts.Database;
 import com.company.staticData.ExceptionMessages;
 
+@Alias(value = "filter")
 public class PrintFilteredStudentsCommand extends Command implements Executable {
-    public PrintFilteredStudentsCommand(String input,
-                                        String[] data,
-                                        Database studentRepository,
-                                        ContentComparer tester,
-                                        DirectoryManager ioManager,
-                                        AsynchDownloader downloadManager) {
-        super(input, data, studentRepository, tester, ioManager, downloadManager);
+
+    @Inject
+    private Database studentRepository;
+
+    public PrintFilteredStudentsCommand(String input, String[] data) {
+        super(input, data);
     }
 
     @Override
@@ -43,13 +40,13 @@ public class PrintFilteredStudentsCommand extends Command implements Executable 
         }
 
         if (takeQuantity.equals("all")) {
-            this.getStudentRepository().filterAndTake(courseName, filter);
+            this.studentRepository.filterAndTake(courseName, filter);
             return;
         }
 
         try {
             int studentsToTake = Integer.parseInt(takeQuantity);
-            this.getStudentRepository().filterAndTake(courseName, filter, studentsToTake);
+            this.studentRepository.filterAndTake(courseName, filter, studentsToTake);
         } catch (NumberFormatException nfe) {
             throw new IllegalArgumentException(ExceptionMessages.INVALID_TAKE_QUANTITY_PARAMETER);
         }

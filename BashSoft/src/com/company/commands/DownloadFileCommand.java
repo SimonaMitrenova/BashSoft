@@ -1,21 +1,18 @@
 package com.company.commands;
 
-import com.company.judge.contracts.ContentComparer;
-import com.company.io.contracts.DirectoryManager;
+import com.company.annotations.Alias;
+import com.company.annotations.Inject;
 import com.company.commands.contracts.Executable;
-import com.company.network.DownloadManager;
 import com.company.network.contracts.AsynchDownloader;
-import com.company.repository.StudentRepository;
-import com.company.repository.contracts.Database;
 
+@Alias(value = "download")
 public class DownloadFileCommand extends Command implements Executable {
-    public DownloadFileCommand(String input,
-                               String[] data,
-                               Database studentRepository,
-                               ContentComparer tester,
-                               DirectoryManager ioManager,
-                               AsynchDownloader downloadManager) {
-        super(input, data, studentRepository, tester, ioManager, downloadManager);
+
+    @Inject
+    private AsynchDownloader downloadManager;
+
+    public DownloadFileCommand(String input, String[] data) {
+        super(input, data);
     }
 
     @Override
@@ -25,6 +22,6 @@ public class DownloadFileCommand extends Command implements Executable {
             throw new IllegalArgumentException(this.getInput());
         }
         String fileUrl = data[1];
-        this.getDownloadManager().download(fileUrl);
+        this.downloadManager.download(fileUrl);
     }
 }

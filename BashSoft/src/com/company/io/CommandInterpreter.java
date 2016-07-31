@@ -1,5 +1,7 @@
 package com.company.io;
 
+import com.company.annotations.Alias;
+import com.company.annotations.Inject;
 import com.company.commands.*;
 import com.company.judge.contracts.ContentComparer;
 import com.company.io.contracts.DirectoryManager;
@@ -11,7 +13,14 @@ import com.company.network.contracts.AsynchDownloader;
 import com.company.repository.StudentRepository;
 import com.company.repository.contracts.Database;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
 public class CommandInterpreter implements Interpreter{
+
+    private static final String COMMANDS_LOCATION = "src/com/company/commands/";
+    private static final String COMMANDS_PATH = "com.company.commands.";
 
     private ContentComparer tester;
     private Database studentRepository;
@@ -39,55 +48,57 @@ public class CommandInterpreter implements Interpreter{
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Executable parseCommand(String input, String[] data, String command) {
-        switch (command){
-            case "open":
-                return new OpenFileCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+        File commandsFolder = new File(COMMANDS_LOCATION);
+        Executable executable = null;
 
-            case "mkdir":
-                return new MakeDirectoryCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+        for (File file : commandsFolder.listFiles()) {
+            if (!file.isFile() || !file.getName().endsWith(".java")){
+                continue;
+            }
 
-            case "ls":
-                return new TraverseFoldersCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+            try {
+                String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+                Class<Executable> executableClass = (Class<Executable>) Class.forName(COMMANDS_PATH + fileName);
+                if (!executableClass.isAnnotationPresent(Alias.class)){
+                    continue;
+                }
 
-            case "cmp":
-                return new CompareFilesCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+                Alias alias = executableClass.getAnnotation(Alias.class);
+                if (!alias.value().equalsIgnoreCase(command)){
+                    continue;
+                }
 
-            case "cdrel":
-                return new ChangeRelativePathCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+                Constructor executableCtor = executableClass.getConstructor(String.class, String[].class);
+                executable = (Executable) executableCtor.newInstance(input, data);
+                this.injectDependencies(executable, executableClass);
 
-            case "cdabs":
-                return new ChangeAbsolutePathCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+            } catch (ReflectiveOperationException ex){
+                ex.printStackTrace();
+            }
+        }
+        return executable;
+    }
 
-            case "readdb":
-                return new ReadDatabaseFromFileCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+    private void injectDependencies(Executable executable, Class<Executable> executableClass) throws IllegalAccessException {
+        Field[] fields = executableClass.getDeclaredFields();
+        for (Field field : fields) {
+            if (!field.isAnnotationPresent(Inject.class)){
+                continue;
+            }
 
-            case "dropdb":
-                return new DropDatabaseCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+            field.setAccessible(true);
+            Field[] theseFields = CommandInterpreter.class.getDeclaredFields();
 
-            case "help":
-                return new GetHelpCommand(input, data, studentRepository, tester, ioManager, downloadManager);
+            for (Field thisField : theseFields) {
+                if (!thisField.getType().equals(field.getType())){
+                    continue;
+                }
 
-            case "show":
-                return new ShowWantedCourseCommand(input, data, studentRepository, tester, ioManager, downloadManager);
-
-            case "filter":
-                return new PrintFilteredStudentsCommand(input, data, studentRepository, tester, ioManager, downloadManager);
-
-            case "order":
-                return new PrintOrderedStudentsCommand(input, data, studentRepository, tester, ioManager, downloadManager);
-
-            case "download":
-                return new DownloadFileCommand(input, data, studentRepository, tester, ioManager, downloadManager);
-
-            case "downloadasynch":
-                return new DownloadAsynchCommand(input, data, studentRepository, tester, ioManager, downloadManager);
-
-            case "display":
-                return new DisplayCommand(input, data, studentRepository, tester, ioManager, downloadManager);
-
-            default:
-                throw new InvalidInputException(input);
+                thisField.setAccessible(true);
+                field.set(executable, thisField.get(this));
+            }
         }
     }
 }
