@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class SimpleSortedList<T extends Comparable<T>> implements SimpleOrderedBag<T>{
+public class SimpleSortedList<T extends Comparable<T>> implements SimpleOrderedBag<T> {
     private static final int DEFAULT_SIZE = 16;
     private T[] innerCollection;
     private Comparator<T> comparator;
@@ -34,7 +34,42 @@ public class SimpleSortedList<T extends Comparable<T>> implements SimpleOrderedB
     }
 
     @Override
+    public boolean remove(T element) {
+        if (element == null){
+            throw new IllegalArgumentException();
+        }
+        boolean hasBeenRemoved = false;
+        int indexOfRemovedElement = 0;
+
+        for (int i = 0; i < this.size(); i++) {
+            if (this.innerCollection[i].compareTo(element) == 0){
+                indexOfRemovedElement = i;
+                this.innerCollection[i] = null;
+                hasBeenRemoved = true;
+                break;
+            }
+        }
+
+        if (hasBeenRemoved){
+            for (int i = indexOfRemovedElement; i < this.size() - 1; i++) {
+                this.innerCollection[i] = this.innerCollection[i + 1];
+            }
+            this.innerCollection[this.size() - 1] = null;
+            this.size--;
+        }
+        return hasBeenRemoved;
+    }
+
+    @Override
+    public int capacity() {
+        return this.innerCollection.length;
+    }
+
+    @Override
     public void add(T element) {
+        if (element == null){
+            throw new IllegalArgumentException();
+        }
         if (this.size == this.innerCollection.length){
             this.resize();
         }
@@ -45,6 +80,9 @@ public class SimpleSortedList<T extends Comparable<T>> implements SimpleOrderedB
 
     @Override
     public void addAll(Collection<T> elements) {
+        if (elements == null){
+            throw new IllegalArgumentException();
+        }
         if (this.size + elements.size() >= this.innerCollection.length){
             this.multiResize(elements);
         }
@@ -63,6 +101,9 @@ public class SimpleSortedList<T extends Comparable<T>> implements SimpleOrderedB
 
     @Override
     public String joinWith(String joiner) {
+        if (joiner == null){
+            throw new IllegalArgumentException();
+        }
         StringBuilder output = new StringBuilder();
         for (T element : this) {
             output.append(element).append(joiner);

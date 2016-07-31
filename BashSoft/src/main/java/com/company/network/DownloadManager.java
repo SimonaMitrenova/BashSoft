@@ -3,7 +3,6 @@ package com.company.network;
 import com.company.exceptions.InvalidPathException;
 import com.company.io.OutputWriter;
 import com.company.network.contracts.AsynchDownloader;
-import com.company.staticData.ExceptionMessages;
 import com.company.staticData.SessionData;
 
 import java.io.File;

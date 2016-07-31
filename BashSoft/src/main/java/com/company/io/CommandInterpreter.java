@@ -2,15 +2,11 @@ package com.company.io;
 
 import com.company.annotations.Alias;
 import com.company.annotations.Inject;
-import com.company.commands.*;
 import com.company.judge.contracts.ContentComparer;
 import com.company.io.contracts.DirectoryManager;
 import com.company.commands.contracts.Executable;
 import com.company.io.contracts.Interpreter;
-import com.company.exceptions.InvalidInputException;
-import com.company.network.DownloadManager;
 import com.company.network.contracts.AsynchDownloader;
-import com.company.repository.StudentRepository;
 import com.company.repository.contracts.Database;
 
 import java.io.File;
@@ -19,8 +15,8 @@ import java.lang.reflect.Field;
 
 public class CommandInterpreter implements Interpreter{
 
-    private static final String COMMANDS_LOCATION = "src/com/company/commands/";
-    private static final String COMMANDS_PATH = "com.company.commands.";
+    private static final String COMMANDS_LOCATION = "src/main/java/com/company/commands/";
+    private static final String COMMANDS_PACKAGE = "com.company.commands.";
 
     private ContentComparer tester;
     private Database studentRepository;
@@ -60,7 +56,7 @@ public class CommandInterpreter implements Interpreter{
 
             try {
                 String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-                Class<Executable> executableClass = (Class<Executable>) Class.forName(COMMANDS_PATH + fileName);
+                Class<Executable> executableClass = (Class<Executable>) Class.forName(COMMANDS_PACKAGE + fileName);
                 if (!executableClass.isAnnotationPresent(Alias.class)){
                     continue;
                 }

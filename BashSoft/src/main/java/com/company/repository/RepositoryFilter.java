@@ -5,7 +5,6 @@ import com.company.staticData.ExceptionMessages;
 import com.company.io.OutputWriter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class RepositoryFilter implements DataFilter {

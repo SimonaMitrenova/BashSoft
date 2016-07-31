@@ -2,9 +2,9 @@ package com.company.commands;
 
 import com.company.annotations.Alias;
 import com.company.annotations.Inject;
-import com.company.io.contracts.DirectoryManager;
 import com.company.commands.contracts.Executable;
 import com.company.exceptions.InvalidInputException;
+import com.company.io.contracts.DirectoryManager;
 
 @Alias(value = "cdabs")
 public class ChangeAbsolutePathCommand extends Command implements Executable {
